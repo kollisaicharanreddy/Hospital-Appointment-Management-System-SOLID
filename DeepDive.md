@@ -164,6 +164,41 @@ All reports implement `ReportService.generate()` and are constructed by `ReportF
 - Interfaces and polymorphism: the project uses interfaces (`BillingService`, `NotificationService`, `DoctorAllocationStrategy`, `ReportService`, `AppointmentService`) and factories to decouple implementation selection from business logic.
 - Factory pattern: `factories/*` centralize object creation based on a string key.
 
+**SOLID principles in this project**
+
+- **S - Single Responsibility Principle**
+  - `services/AppointmentBookingService.java`, `services/AppointmentCancellationService.java`, `services/AppointmentRescheduleService.java`, `services/BillingGenerationService.java`, and `services/ReportGenerationService.java` each do one business job instead of combining booking, billing, reporting, and notification logic in one class.
+  - `factories/NotificationFactory.java`, `factories/BillingFactory.java`, `factories/DoctorAllocationFactory.java`, and `factories/ReportFactory.java` only create objects and do not contain business rules.
+  - `services/HospitalStore.java` only manages in-memory data storage and lookup. It does not decide business rules such as how to allocate doctors or how to calculate billing.
+  - Why it matters: the code is easier to understand, test, and change because one class has one main reason to change.
+
+- **O - Open/Closed Principle**
+  - `interfaces/BillingService.java`, `interfaces/DoctorAllocationStrategy.java`, `interfaces/NotificationService.java`, and `interfaces/ReportService.java` define extension points.
+  - New billing or allocation behavior can be added by creating a new class in `implementations/billing/` or `implementations/allocation/` and wiring it through the relevant factory, without changing the caller logic in `Main.java` or the service classes.
+  - Example: `implementations/billing/EmergencyBillingService.java` and `implementations/billing/FollowUpDiscountBillingService.java` extend billing behavior without modifying `services/BillingGenerationService.java`.
+  - Why it matters: the system is open for extension but closed for direct modification in the core flow.
+
+- **L - Liskov Substitution Principle**
+  - Any class that implements `interfaces/BillingService.java` can be used where a `BillingService` is expected, such as `StandardBillingService`, `EmergencyBillingService`, or `FollowUpDiscountBillingService`.
+  - Any class that implements `interfaces/NotificationService.java` can be swapped into `AppointmentBookingService`, `AppointmentCancellationService`, or `AppointmentRescheduleService` without changing those services.
+  - Any `DoctorAllocationStrategy` implementation can be used by `AppointmentBookingService` because it only relies on the `allocate(...)` contract.
+  - Why it matters: the services remain stable even when the concrete implementations change, as long as the contract is honored.
+
+- **I - Interface Segregation Principle**
+  - The project uses small focused interfaces instead of one large interface. For example, billing, notification, doctor allocation, and reporting each have their own contract.
+  - `interfaces/AppointmentService.java` is also small and focused on appointment booking behavior only.
+  - Why it matters: classes are not forced to implement methods they do not need, which keeps the design simpler and cleaner.
+
+- **D - Dependency Inversion Principle**
+  - High-level services such as `services/AppointmentBookingService.java` and `services/BillingGenerationService.java` depend on abstractions (`DoctorAllocationStrategy`, `NotificationService`, `BillingService`) rather than concrete classes.
+  - `Main.java` creates the concrete implementations through factories and passes them into the services. This moves object creation away from business logic.
+  - `services/ReportGenerationService.java` depends on `interfaces/ReportService` through `ReportFactory`, not on specific report classes directly.
+  - Why it matters: the design is easier to test, swap, and extend because dependencies are inverted toward interfaces instead of hard-coded implementations.
+
+Short conclusion on SOLID:
+- The project shows SOLID in a practical but lightweight way, especially through small services, interfaces, and factories.
+- Some model and store classes are intentionally simple because this is a console-based LLD project, but the core service design still follows the principles well.
+
 **How files connect (high-level call graph)**
 
 - `Main.java` creates a `HospitalStore` and configures implementations via factories. It constructs all service objects and drives the CLI loop.
