@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HospitalStore.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">hospital-appointment-management-system</a> &gt; <a href="index.source.html" class="el_package">services</a> &gt; <span class="el_source">HospitalStore.java</span></div><h1>HospitalStore.java</h1><pre class="source lang-java linenums">package services;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import models.Appointment;
+import models.Bill;
+import models.Doctor;
+import models.Patient;
+
+<span class="fc" id="L12">public class HospitalStore {</span>
+<span class="fc" id="L13">    private final Map&lt;Integer, Patient&gt; patients = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L14">    private final Map&lt;Integer, Doctor&gt; doctors = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L15">    private final Map&lt;Integer, Appointment&gt; appointments = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L16">    private final List&lt;Bill&gt; bills = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L17">    private int nextPatientId = 1;</span>
+<span class="fc" id="L18">    private int nextDoctorId = 1;</span>
+<span class="fc" id="L19">    private int nextAppointmentId = 1;</span>
+<span class="fc" id="L20">    private int nextBillId = 1;</span>
+
+    public Patient addPatient(String name, String phone) {
+<span class="fc" id="L23">        Patient patient = new Patient(nextPatientId++, name, phone);</span>
+<span class="fc" id="L24">        patients.put(patient.id, patient);</span>
+<span class="fc" id="L25">        return patient;</span>
+    }
+
+    public Doctor addDoctor(String name, String specialty) {
+<span class="fc" id="L29">        Doctor doctor = new Doctor(nextDoctorId++, name, specialty);</span>
+<span class="fc" id="L30">        doctors.put(doctor.id, doctor);</span>
+<span class="fc" id="L31">        return doctor;</span>
+    }
+
+    public Appointment addAppointment(int patientId, int doctorId, String time, String notes) {
+<span class="fc" id="L35">        Appointment appointment = new Appointment(nextAppointmentId++, patientId, doctorId, time, notes);</span>
+<span class="fc" id="L36">        appointments.put(appointment.id, appointment);</span>
+<span class="fc" id="L37">        return appointment;</span>
+    }
+
+    public Bill addBill(int appointmentId, double amount) {
+<span class="fc" id="L41">        Bill bill = new Bill(nextBillId++, appointmentId, amount);</span>
+<span class="fc" id="L42">        bills.add(bill);</span>
+<span class="fc" id="L43">        return bill;</span>
+    }
+
+    public Patient findPatient(int id) {
+<span class="fc" id="L47">        return patients.get(id);</span>
+    }
+
+    public Doctor findDoctor(int id) {
+<span class="fc" id="L51">        return doctors.get(id);</span>
+    }
+
+    public Appointment findAppointment(int id) {
+<span class="fc" id="L55">        return appointments.get(id);</span>
+    }
+
+    public boolean removeAppointment(int id) {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        return appointments.remove(id) != null;</span>
+    }
+
+    public void replaceAppointment(Appointment appointment) {
+<span class="fc" id="L63">        appointments.put(appointment.id, appointment);</span>
+<span class="fc" id="L64">    }</span>
+
+    public List&lt;Patient&gt; listPatients() {
+<span class="fc" id="L67">        return new ArrayList&lt;&gt;(patients.values());</span>
+    }
+
+    public List&lt;Doctor&gt; listDoctors() {
+<span class="fc" id="L71">        return new ArrayList&lt;&gt;(doctors.values());</span>
+    }
+
+    public List&lt;Appointment&gt; listAppointments() {
+<span class="fc" id="L75">        return new ArrayList&lt;&gt;(appointments.values());</span>
+    }
+
+    public List&lt;Bill&gt; listBills() {
+<span class="fc" id="L79">        return new ArrayList&lt;&gt;(bills);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientHistoryReportService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">hospital-appointment-management-system</a> &gt; <a href="index.source.html" class="el_package">implementations.reports</a> &gt; <span class="el_source">PatientHistoryReportService.java</span></div><h1>PatientHistoryReportService.java</h1><pre class="source lang-java linenums">package implementations.reports;
+
+import interfaces.ReportService;
+import services.HospitalStore;
+
+public class PatientHistoryReportService implements ReportService {
+    private final HospitalStore store;
+    private final int patientId;
+
+<span class="fc" id="L10">    public PatientHistoryReportService(HospitalStore store, int patientId) {</span>
+<span class="fc" id="L11">        this.store = store;</span>
+<span class="fc" id="L12">        this.patientId = patientId;</span>
+<span class="fc" id="L13">    }</span>
+
+    public String generate() {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        long count = store.listAppointments().stream().filter(appointment -&gt; appointment.patientId == patientId).count();</span>
+<span class="fc" id="L17">        return &quot;Patient history report: patientId=&quot; + patientId + &quot;, appointments=&quot; + count;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

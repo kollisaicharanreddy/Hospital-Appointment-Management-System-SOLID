@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">hospital-appointment-management-system</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">import factories.BillingFactory;
+import factories.DoctorAllocationFactory;
+import factories.NotificationFactory;
+import interfaces.BillingService;
+import interfaces.DoctorAllocationStrategy;
+import interfaces.NotificationService;
+import java.util.Scanner;
+import models.Appointment;
+import models.Bill;
+import models.Doctor;
+import models.Patient;
+import services.AppointmentBookingService;
+import services.AppointmentCancellationService;
+import services.AppointmentRescheduleService;
+import services.BillingGenerationService;
+import services.DoctorManagementService;
+import services.HospitalStore;
+import services.ReportGenerationService;
+
+<span class="nc" id="L20">public class Main {</span>
+    public static void main(String[] args) {
+<span class="fc" id="L22">        Scanner sc = new Scanner(System.in);</span>
+<span class="fc" id="L23">        HospitalStore store = new HospitalStore();</span>
+<span class="fc" id="L24">        NotificationService notificationService = NotificationFactory.create(&quot;console&quot;);</span>
+<span class="fc" id="L25">        BillingService billingService = BillingFactory.create(&quot;standard&quot;);</span>
+<span class="fc" id="L26">        DoctorAllocationStrategy doctorAllocationStrategy = DoctorAllocationFactory.create(&quot;specialty&quot;, store);</span>
+<span class="fc" id="L27">        DoctorManagementService doctorSvc = new DoctorManagementService(store);</span>
+<span class="fc" id="L28">        AppointmentBookingService bookSvc = new AppointmentBookingService(store, doctorAllocationStrategy, notificationService);</span>
+<span class="fc" id="L29">        AppointmentCancellationService cancelSvc = new AppointmentCancellationService(store, notificationService);</span>
+<span class="fc" id="L30">        AppointmentRescheduleService rescheduleSvc = new AppointmentRescheduleService(store, notificationService);</span>
+<span class="fc" id="L31">        BillingGenerationService billingSvc = new BillingGenerationService(store, billingService);</span>
+<span class="fc" id="L32">        ReportGenerationService reportSvc = new ReportGenerationService(store);</span>
+
+        while (true) {
+<span class="fc" id="L35">            System.out.println(&quot;1)add patient 2)add doctor 3)book 4)cancel 5)reschedule 6)bill 7)reports 8)list 0)exit&quot;);</span>
+<span class="fc" id="L36">            String line = sc.nextLine();</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">            if (line.equals(&quot;0&quot;)) {</span>
+<span class="fc" id="L39">                break;</span>
+            }
+
+<span class="fc bfc" id="L42" title="All 9 branches covered.">            switch (line) {</span>
+                case &quot;1&quot;:
+<span class="fc" id="L44">                    System.out.print(&quot;name:&quot;);</span>
+<span class="fc" id="L45">                    String name = sc.nextLine();</span>
+<span class="fc" id="L46">                    System.out.print(&quot;phone:&quot;);</span>
+<span class="fc" id="L47">                    String phone = sc.nextLine();</span>
+<span class="fc" id="L48">                    Patient p = store.addPatient(name, phone);</span>
+<span class="fc" id="L49">                    System.out.println(&quot;added:&quot; + p);</span>
+<span class="fc" id="L50">                    break;</span>
+
+                case &quot;2&quot;:
+<span class="fc" id="L53">                    System.out.print(&quot;name:&quot;);</span>
+<span class="fc" id="L54">                    String dname = sc.nextLine();</span>
+<span class="fc" id="L55">                    System.out.print(&quot;specialty:&quot;);</span>
+<span class="fc" id="L56">                    String spec = sc.nextLine();</span>
+<span class="fc" id="L57">                    Doctor d = doctorSvc.add(dname, spec);</span>
+<span class="fc" id="L58">                    System.out.println(&quot;added:&quot; + d);</span>
+<span class="fc" id="L59">                    break;</span>
+
+                case &quot;3&quot;:
+<span class="fc" id="L62">                    System.out.print(&quot;patient id:&quot;);</span>
+<span class="fc" id="L63">                    int pid = Integer.parseInt(sc.nextLine());</span>
+<span class="fc" id="L64">                    System.out.print(&quot;specialty:&quot;);</span>
+<span class="fc" id="L65">                    String specialty = sc.nextLine();</span>
+<span class="fc" id="L66">                    System.out.print(&quot;time:&quot;);</span>
+<span class="fc" id="L67">                    String time = sc.nextLine();</span>
+<span class="fc" id="L68">                    Appointment a = bookSvc.book(pid, specialty, time, &quot;&quot;);</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">                    System.out.println(a == null ? &quot;booking failed&quot; : &quot;booked:&quot; + a);</span>
+<span class="fc" id="L70">                    break;</span>
+
+                case &quot;4&quot;:
+<span class="fc" id="L73">                    System.out.print(&quot;appointment id:&quot;);</span>
+<span class="fc" id="L74">                    int cancelId = Integer.parseInt(sc.nextLine());</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                    System.out.println(cancelSvc.cancel(cancelId) ? &quot;cancelled&quot; : &quot;not found&quot;);</span>
+<span class="fc" id="L76">                    break;</span>
+
+                case &quot;5&quot;:
+<span class="fc" id="L79">                    System.out.print(&quot;appointment id:&quot;);</span>
+<span class="fc" id="L80">                    int rescheduleId = Integer.parseInt(sc.nextLine());</span>
+<span class="fc" id="L81">                    System.out.print(&quot;new time:&quot;);</span>
+<span class="fc" id="L82">                    String newTime = sc.nextLine();</span>
+<span class="fc" id="L83">                    Appointment updated = rescheduleSvc.reschedule(rescheduleId, newTime);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">                    System.out.println(updated == null ? &quot;not found&quot; : &quot;rescheduled:&quot; + updated);</span>
+<span class="fc" id="L85">                    break;</span>
+
+                case &quot;6&quot;:
+<span class="fc" id="L88">                    System.out.print(&quot;appointment id:&quot;);</span>
+<span class="fc" id="L89">                    int billAppointmentId = Integer.parseInt(sc.nextLine());</span>
+<span class="fc" id="L90">                    Bill bill = billingSvc.generate(billAppointmentId);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">                    System.out.println(bill == null ? &quot;not found&quot; : &quot;bill:&quot; + bill);</span>
+<span class="fc" id="L92">                    break;</span>
+
+                case &quot;7&quot;:
+<span class="fc" id="L95">                    System.out.println(reportSvc.generateDailyRevenueReport());</span>
+<span class="fc" id="L96">                    System.out.println(reportSvc.generateDoctorReport());</span>
+<span class="fc" id="L97">                    System.out.print(&quot;patient id for history:&quot;);</span>
+<span class="fc" id="L98">                    int historyPatientId = Integer.parseInt(sc.nextLine());</span>
+<span class="fc" id="L99">                    System.out.println(reportSvc.generatePatientHistoryReport(historyPatientId));</span>
+<span class="fc" id="L100">                    break;</span>
+
+                case &quot;8&quot;:
+<span class="fc" id="L103">                    System.out.println(&quot;Patients:&quot;);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">                    for (Patient patient : store.listPatients()) {</span>
+<span class="fc" id="L105">                        System.out.println(patient);</span>
+<span class="fc" id="L106">                    }</span>
+
+<span class="fc" id="L108">                    System.out.println(&quot;Doctors:&quot;);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">                    for (Doctor doctor : store.listDoctors()) {</span>
+<span class="fc" id="L110">                        System.out.println(doctor);</span>
+<span class="fc" id="L111">                    }</span>
+
+<span class="fc" id="L113">                    System.out.println(&quot;Appointments:&quot;);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">                    for (Appointment appointment : store.listAppointments()) {</span>
+<span class="fc" id="L115">                        System.out.println(appointment);</span>
+<span class="fc" id="L116">                    }</span>
+
+<span class="fc" id="L118">                    System.out.println(&quot;Bills:&quot;);</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">                    for (Bill item : store.listBills()) {</span>
+<span class="fc" id="L120">                        System.out.println(item);</span>
+<span class="fc" id="L121">                    }</span>
+<span class="fc" id="L122">                    break;</span>
+
+                default:
+<span class="fc" id="L125">                    System.out.println(&quot;unknown&quot;);</span>
+            }
+<span class="fc" id="L127">        }</span>
+
+<span class="fc" id="L129">        sc.close();</span>
+<span class="fc" id="L130">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
