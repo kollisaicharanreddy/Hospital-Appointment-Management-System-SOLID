@@ -207,22 +207,14 @@ Short conclusion on SOLID:
 - `BillingGenerationService` depends on `BillingService` (provided by `BillingFactory`).
 - `ReportGenerationService` depends on `ReportFactory` which selects a `ReportService` implementation.
 
-**Notes, limitations, and suggestions for extension**
-
-- The allocation strategies use simple heuristics; they can be replaced with more realistic data-driven strategies (e.g., counting current appointments per doctor, availability calendars, or priority queues).
-- `HospitalStore` is in-memory and single-process. To persist data between restarts, add a persistence layer (JDBC/ORM, file storage, or a lightweight embedded DB).
-- Notification implementations are stubs that `System.out.println` messages — replace with real integrations for email/SMS/WhatsApp to deliver notifications.
-- Consider adding validation and error handling around `Integer.parseInt` calls in `Main` to avoid runtime exceptions on invalid input.
-- Add unit tests for each service and strategy. The current structure—with small classes and dependency injection—makes this straightforward.
-
 ---
 
-If you want, I can:
-- generate separate `DeepDive_<filename>.md` files per source file instead of this single document, or
-- produce a condensed diagram (Mermaid) showing the call graph and dependencies, or
-- run a static analysis or add Javadoc comments directly into the source files.
+**Testing**
 
-Tell me which follow-up you'd like next.
+- Tests live in `src/test/java/` and cover factories, pure components, services, and the full `Main` program.
+- Run tests with: `mvn test` — Maven uses the Surefire plugin to discover and run JUnit 5 tests.
+- Generate a coverage report with JaCoCo: `mvn test jacoco:report`. The HTML report is at `target/site/jacoco/index.html` and execution data is in `target/jacoco.exec`.
+- A beginner-friendly explanation and a deep-dive into the three test files is provided in [TESTING_GUIDE.md](TESTING_GUIDE.md).
 
 **Testing & Coverage (2026-05-30)**
 
@@ -241,4 +233,4 @@ mvn test jacoco:report
 ```
 
 - The coverage site is available at `target/site/jacoco/index.html`. The JaCoCo execution data file is `target/jacoco.exec`.
-- If you want a short summary added here (number of tests, failures, and overall coverage %), I can run the tests now and append the results to this document.
+ 
