@@ -46,3 +46,11 @@ java Main
 Use the menu in `Main` to add patients, add doctors, book appointments, cancel appointments, reschedule appointments, generate bills, and print reports.
 
 For a detailed explanation of every file and the full runtime flow, see [DeepDive.md](DeepDive.md).
+
+## Testing & Coverage (2026-05-30)
+
+- **Run unit tests:** execute `mvn test` from the repository root. Test reports (text and XML) are written to `target/surefire-reports/`.
+- **Generate coverage report (JaCoCo):** run `mvn test jacoco:report` (or `mvn jacoco:report` after tests complete). The HTML coverage report is available at `target/site/jacoco/index.html` and the binary execution data is `target/jacoco.exec`.
+- **Quick checks:** open `target/surefire-reports/` for test outputs and `target/site/jacoco/index.html` in a browser to inspect line-level coverage.
+
+If you'd like, I can run the tests locally and embed a short summary (pass/fail counts and coverage %) into these docs.

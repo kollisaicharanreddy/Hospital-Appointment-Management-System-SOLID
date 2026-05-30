@@ -223,3 +223,22 @@ If you want, I can:
 - run a static analysis or add Javadoc comments directly into the source files.
 
 Tell me which follow-up you'd like next.
+
+**Testing & Coverage (2026-05-30)**
+
+- To run the project's tests use Maven from the project root:
+
+```powershell
+mvn test
+```
+
+- Test reports (plain text and XML) are produced under `target/surefire-reports/` (useful for CI or local inspection).
+- To produce an HTML coverage report with JaCoCo run:
+
+```powershell
+mvn test jacoco:report
+# or if tests already ran: mvn jacoco:report
+```
+
+- The coverage site is available at `target/site/jacoco/index.html`. The JaCoCo execution data file is `target/jacoco.exec`.
+- If you want a short summary added here (number of tests, failures, and overall coverage %), I can run the tests now and append the results to this document.
